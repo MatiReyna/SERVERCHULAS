@@ -14,7 +14,7 @@ module.exports = (sequelize) => {
             unique: true
         },
         price: {
-            type: DataTypes.NUMBER,
+            type: DataTypes.DECIMAL(3,2),
             allowNull: false
         }
     }, { timestamps: false })
