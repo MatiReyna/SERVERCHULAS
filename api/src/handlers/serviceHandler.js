@@ -1,4 +1,4 @@
-const { createService, serviceByName } = require('../controllers/serviceController');
+const { createService, serviceByName, allServices } = require('../controllers/serviceController');
 
 const postService = async (request, response) => {
     const { name, price } = request.body;
@@ -16,6 +16,9 @@ const getServiceByName = async (request, response) => {
         if (name) {
             const serviceName = await serviceByName(name);
             response.status(200).json(serviceName);
+        } else {
+            const data = await allServices();
+            response.status(200).json(data);
         }
     } catch (error) {
         response.status(500).json({ status: false, error: error.message });

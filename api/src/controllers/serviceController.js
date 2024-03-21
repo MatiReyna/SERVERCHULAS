@@ -26,12 +26,29 @@ const createService = async (name, price) => {
         })
     }
 
-    // const { data } = await allService();
+    const { data } = await allServices();
 
     return {
         status: true,
         message: `The ${upperCaseName} service was successfully created`,
+        data
     }
+};
+
+const allServices = async () => {
+
+    const dataService = await servicio.findAll();  // Nos traemos todos los servicios de la base de datos.
+
+    const formatteData = {
+        status: true,
+        message: 'List of services',
+        data: dataService.map((service) => ({
+            id: service.id,
+            name: service.name,
+            price: service.price
+        }))
+    }
+    return formatteData
 };
 
 const serviceByName = async (name) => {
@@ -63,5 +80,6 @@ const serviceByName = async (name) => {
 
 module.exports = {
     createService,
+    allServices,
     serviceByName
 }
