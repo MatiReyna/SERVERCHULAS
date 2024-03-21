@@ -1,4 +1,4 @@
-const { createService } = require('../controllers/serviceController');
+const { createService, serviceByName } = require('../controllers/serviceController');
 
 const postService = async (request, response) => {
     const { name, price } = request.body;
@@ -10,6 +10,19 @@ const postService = async (request, response) => {
     }
 };
 
+const getServiceByName = async (request, response) => {
+    const { name } = request.query;
+    try {
+        if (name) {
+            const serviceName = await serviceByName(name);
+            response.status(200).json(serviceName);
+        }
+    } catch (error) {
+        response.status(500).json({ status: false, error: error.message });
+    }
+};
+
 module.exports = {
-    postService
+    postService,
+    getServiceByName
 }

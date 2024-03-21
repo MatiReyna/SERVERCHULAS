@@ -34,6 +34,34 @@ const createService = async (name, price) => {
     }
 };
 
+const serviceByName = async (name) => {
+    const upperCaseName = name.toUpperCase();  // Convertimos el nombre a mayúscula.
+
+    // Buscamos el servicio en la base de datos.
+    const serviceFind = await servicio.findAll({
+        where: {
+            name: {
+                [Op.iLike]: `%${upperCaseName}%`,
+            }
+        }
+    });
+
+    if (serviceFind.length) {  // Si tiene largo, quiere decir que encontro el service.
+        return {
+            status: true,
+            message: `${upperCaseName} service found`,
+            data: serviceFind
+        }
+    } else {  // Caso contrario, no se encontro el servicio en la base de datos.
+        return {
+            status: false,
+            message: `The ${upperCaseName} service is not created`,
+            data: []
+        }
+    }
+};
+
 module.exports = {
-    createService
+    createService,
+    serviceByName
 }
