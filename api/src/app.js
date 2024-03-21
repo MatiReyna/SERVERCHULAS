@@ -1,6 +1,7 @@
 const express = require('express');
 const server = express();
 const morgan = require('morgan');
+const mainRouter = require('./routes/index');
 
 server.use(express.json());
 server.use(morgan('dev'));
@@ -18,6 +19,8 @@ server.use((req, res, next) => {
     );
     next();
 });
+
+server.use('/misschulas', mainRouter);
 
 server.use((err, req, res, next) => {
     console.error(err.stack);
