@@ -26,9 +26,9 @@ const createService = async (name, price) => {
         })
     }
 
-    const { data } = await allServices();
+    const { data } = await allServices();  // Me traigo todos los servicios ya creados en la base de datos.
 
-    return {
+    return {  // Respondo que se creo con una lista de todos los servicios hasta el momento.
         status: true,
         message: `The ${upperCaseName} service was successfully created`,
         data
@@ -78,8 +78,34 @@ const serviceByName = async (name) => {
     }
 };
 
+const serviceById = async (id) => {
+
+    const idService = await servicio.findOne({ where: { id } });  // En esta variable me traigo el servicio con el id solicitado.
+
+    if (idService) {
+        return {
+            status: true,
+            message: `Service with ID: ${id} was found`,
+            data: [
+                {
+                    id: idService.id,
+                    name: idService.name,
+                    price: idService.price
+                }
+            ]
+        }
+    } else {
+        return {
+            status: false,
+            message: `Service with ID: ${id} does not exist in the database`,
+            data: []
+        }
+    }
+};
+
 module.exports = {
     createService,
     allServices,
-    serviceByName
+    serviceByName,
+    serviceById
 }

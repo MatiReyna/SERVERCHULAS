@@ -3,7 +3,7 @@ const { DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
     sequelize.define('turno', {
         day: {
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,  // Este es solo para almacener la fecha en la base de datos.
             allowNull: false
         },
         timetable: {
