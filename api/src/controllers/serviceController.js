@@ -1,7 +1,7 @@
 const { Op } = require('sequelize');
 const { servicio } = require('../DB_connection');
 
-const createService = async (name, price) => {
+const createService = async (name, price) => {  // Controller que se encanrga de la creación de los servicios.
     const upperCaseName = name.toUpperCase();  // Convertimos el nombre a mayúscula.
 
     // Nos fijamos si el servicio existe en la base de datos.
@@ -103,9 +103,37 @@ const serviceById = async (id) => {
     }
 };
 
+const deleteService = async (id) => {
+
+    const serviceExisting = await servicio.findOne(
+        { where: { id } },
+        { attributes: [ 'name' ] }
+    );
+
+    if (!serviceExisting) {
+        return {
+            status: false,
+            message: `Service with ID: ${id} does not exist`,
+            data: []
+        }
+    }
+
+    const deleted = await servicio.destroy({ where: { id } });
+    const { data } = await allServices();
+    
+    if (deleted) {
+        return {
+            status: true,
+            message: `Service ${serviceExisting.name} deleted successfully`,
+            data
+        }
+    }
+};
+
 module.exports = {
     createService,
     allServices,
     serviceByName,
-    serviceById
+    serviceById,
+    deleteService
 }
