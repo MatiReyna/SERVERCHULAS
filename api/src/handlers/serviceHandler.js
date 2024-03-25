@@ -1,4 +1,4 @@
-const { createService, allServices, serviceByName, serviceById, deleteService } = require('../controllers/serviceController');
+const { createService, allServices, serviceByName, serviceById, deleteService, upGradeService } = require('../controllers/serviceController');
 
 const postService = async (request, response) => {
     const { name, price } = request.body;
@@ -45,9 +45,20 @@ const serviceDelete = async (request, response) => {
     }
 };
 
+const putService = async (request, response) => {
+    const { id, name, price } = request.body;
+    try {
+        const upGrade = await upGradeService(id, name, price);
+        response.status(200).json(upGrade);
+    } catch (error) {
+        response.status(500).json({ status: false, error: error.message });
+    }
+};
+
 module.exports = {
     postService,
     getServiceByName,
     getServiceById,
-    serviceDelete
+    serviceDelete,
+    putService
 }

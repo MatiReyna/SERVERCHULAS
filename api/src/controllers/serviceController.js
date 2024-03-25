@@ -130,10 +130,38 @@ const deleteService = async (id) => {
     }
 };
 
+const upGradeService = async (id, name, price) => {
+    const upperCaseName = name.toUpperCase();  // Convertimos el nombre a mayúscula.
+
+    const idService = await servicio.findOne({ where: { id } });  // En esta variable me traigo el servicio con el id solicitado.
+
+    if (!idService) {
+        return {
+            status: false,
+            message: `There is no service with ID: ${id} to upgrade`,
+            data: []
+        }
+    } else {
+        // Le reasigno el valor del nombre o precio del servicio.
+        idService.name = upperCaseName;
+        idService.price = price;
+        await idService.save();  // Ejecutamos el método para que se guarden los nuevos valores reasignados a la DB.
+
+        const { data } = await allServices();
+
+        return {
+            status: true,
+            message: `Service with ID: ${id} was successfully upgraded to: ${upperCaseName}`,
+            data
+        }
+    }
+};
+
 module.exports = {
     createService,
     allServices,
     serviceByName,
     serviceById,
-    deleteService
+    deleteService,
+    upGradeService
 }
