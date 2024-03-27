@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const { turno } = require('../DB_connection');
 
 const createTurno = async (day, timetable) => {
@@ -40,13 +41,39 @@ const allTurnos = async () => {
         data: dataTurno.map((turno) => ({
             id: turno.id,
             day: turno.day,
-            timetable: turno.timetable
+            timetable: turno.timetable,
+            states: turno.states
         }))
     }
     return formatteData
 };
 
+const turnoByDay = async (day) => {
+
+    // Buscamos los turnos en la base de datos.
+    const turnoFind = await turno.findAll({
+        where: {
+            day: day
+        }
+    });
+
+    if (turnoFind.length) {
+        return {
+            status: true,
+            message: `Shifts found for the day: ${day}`,
+            data: turnoFind
+        }
+    } else {
+        return {
+            status: false,
+            message: `No shifts created for the day: ${day}`,
+            data: []
+        }
+    }
+};
+
 module.exports = {
     createTurno,
-    allTurnos
+    allTurnos,
+    turnoByDay
 }

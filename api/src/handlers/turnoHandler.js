@@ -1,4 +1,4 @@
-const { createTurno } = require('../controllers/turnoController');
+const { createTurno, allTurnos, turnoByDay } = require('../controllers/turnoController');
 
 const postTurno = async (request, response) => {
     const { day, timetable } = request.body;
@@ -10,6 +10,22 @@ const postTurno = async (request, response) => {
     }
 };
 
+const getTurnoByDay = async (request, response) => {
+    const { day } = request.query;
+    try {
+        if (day) {
+            const turnoDay = await turnoByDay(day);
+            response.status(200).json(turnoDay);
+        } else {
+            const data = await allTurnos();
+            response.status(200).json(data);
+        }
+    } catch (error) {
+        response.status(500).json({ status: false, error: error.message });
+    }
+};
+
 module.exports = {
-    postTurno
+    postTurno,
+    getTurnoByDay
 }
