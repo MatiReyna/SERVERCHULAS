@@ -4,6 +4,22 @@ const { servicio } = require('../DB_connection');
 const createService = async (name, price) => {  // Controller que se encanrga de la creación de los servicios.
     const upperCaseName = name.toUpperCase();  // Convertimos el nombre a mayúscula.
 
+    if (isNaN(price)) {  // Validación para asegurarse que el precio sea un número.
+        return {
+            status: false,
+            message: 'The price must be a valid number',
+            data: []
+        }
+    }
+
+    if (!/^[a-zA-Z\s]+$/.test(name)) {  // Verifica si el nombre del servicio contiene caracteres no deseados.
+        return {
+            status: false,
+            message: 'The service name should only contain letters and spaces',
+            data: []
+        }
+    }
+
     // Nos fijamos si el servicio existe en la base de datos.
     const serviceExist = await servicio.findOne({
         where: {
@@ -53,6 +69,14 @@ const allServices = async () => {
 
 const serviceByName = async (name) => {
     const upperCaseName = name.toUpperCase();  // Convertimos el nombre a mayúscula.
+
+    if (!/^[a-zA-Z\s]+$/.test(name)) {  // Verifica si el nombre del servicio contiene caracteres no deseados.
+        return {
+            status: false,
+            message: 'The service name should only contain letters and spaces',
+            data: []
+        }
+    }
 
     // Buscamos el servicio en la base de datos.
     const serviceFind = await servicio.findAll({
