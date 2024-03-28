@@ -72,8 +72,35 @@ const turnoByDay = async (day) => {
     }
 };
 
+const turnoByTimetable = async (timetable) => {
+
+    const turnoFind = await turno.findOne({ where: { timetable } });
+
+    if (turnoFind) {
+        return {
+            status: true,
+            message: `Turno with timetable: ${timetable} was found`,
+            data: [
+                {
+                    id: turnoFind.id,
+                    day: turnoFind.day,
+                    timetable: turnoFind.timetable,
+                    states: turnoFind.states
+                }
+            ]
+        }
+    } else {
+        return {
+            state: false,
+            message: `Turno with timetable: ${timetable} does not in the database`,
+            data: []
+        }
+    }
+};
+
 module.exports = {
     createTurno,
     allTurnos,
-    turnoByDay
+    turnoByDay,
+    turnoByTimetable
 }
