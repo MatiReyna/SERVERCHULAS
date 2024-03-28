@@ -9,6 +9,7 @@ module.exports = (sequelize) => {
         timetable: {
             type: DataTypes.STRING,
             allowNull: false,
+            unique: false,
             validate: {
                 is: /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/  // Validación del formato hora HH:MM.
             }
