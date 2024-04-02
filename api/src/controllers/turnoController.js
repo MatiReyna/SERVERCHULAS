@@ -92,9 +92,42 @@ const turnoByTimetable = async (timetable) => {
     }
 };
 
+const deleteTurno = async (day, timetable) => {
+
+    const turnoExist = await turno.findOne({
+        where: {
+            day: day,
+            timetable: timetable
+        }
+    })
+
+    if (!turnoExist) {
+        return {
+            status: false,
+            message: `The shift ${day} at ${timetable} does not exist`,
+            data: []
+        }
+    }
+
+    const deleted = await turno.destroy({
+        where: {
+            day: day,
+            timetable: timetable
+        }
+    })
+    
+    if (deleted) {
+        return {
+            status: true,
+            message: `The shift ${day} at ${timetable} deleted successfully`
+        }
+    }
+};
+
 module.exports = {
     createTurno,
     allTurnos,
     turnoByDay,
-    turnoByTimetable
+    turnoByTimetable,
+    deleteTurno
 }
