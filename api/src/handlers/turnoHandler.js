@@ -46,9 +46,9 @@ const turnoDelete = async (request, response) => {
 };
 
 const putTurno = async (request, response) => {
-    const { day, timetable } = request.body;
+    const { id, day, timetable } = request.body;
     try {
-        const upGrade = await upGradeTurno(day, timetable);
+        const upGrade = await upGradeTurno(id, day, timetable);
         response.status(200).json(upGrade);
     } catch (error) {
         response.status(500).json({ status: false, error: error.message });

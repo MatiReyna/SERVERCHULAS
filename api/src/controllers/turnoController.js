@@ -120,34 +120,48 @@ const deleteTurno = async (day, timetable) => {
     }
 };
 
-const upGradeTurno = async (day, timetable) => {
+const upGradeTurno = async (id, day, timetable) => {
 
-    const turnoExist = await turno.findOne({
-        where: {
-            day: day,
-            timetable: timetable
-        }
-    });
+    const turnoExist = await turno.findOne({ where: { id } });  // Buscamos el turno por id en la base de datos.
 
     if (!turnoExist) {
         return {
             status: false,
-            message: `There is no shift on the day ${day} at ${timetable} to update`,
+            message: `There is no shift with ID: ${id} to update`,
             data: []
         }
-    } else {
-        turnoExist.day = day;
-        turnoExist.timetable = timetable;
-        await turnoExist.save();
+    } 
 
-        const { data } = await allTurnos();
+    const busyTurno = await turno.findOne({
+        where: {
+            day: day,
+            timetable: timetable,
+            id: {
+                [Op.ne]: id
+            }
+        }
+    });
 
+    if (busyTurno) {
         return {
-            status: true,
-            message: `Correctly updated the shift of the day ${day}`,
-            data
+            status: false,
+            message: `The ${timetable} for the dat ${day} is already taken up by another shift`,
+            data: []
         }
     }
+    
+    turnoExist.day = day;
+    turnoExist.timetable = timetable;
+    await turnoExist.save();
+
+    const { data } = await allTurnos();
+
+    return {
+        status: true,
+        message: `Correctly updated the shift of the day ${day}`,
+        data
+    }
+
 };
 
 module.exports = {

@@ -7,7 +7,6 @@ module.exports = (sequelize) => {
             allowNull: false,
             validate: {
                 isDate: true,  // Verifica que la fecha tenga el formato correcto.
-                isAfter: new Date().toISOString().split('T')[O]  // Garantiza que la fecha sea igual o posterior al día actual.
             }
         },
         timetable: {
