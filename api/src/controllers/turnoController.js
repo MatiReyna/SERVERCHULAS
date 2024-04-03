@@ -52,11 +52,7 @@ const allTurnos = async () => {
 const turnoByDay = async (day) => {
 
     // Buscamos los turnos en la base de datos.
-    const turnoFind = await turno.findAll({
-        where: {
-            day: day
-        }
-    });
+    const turnoFind = await turno.findAll({ where: { day: day } });
 
     if (turnoFind.length) {
         return {
@@ -99,7 +95,7 @@ const deleteTurno = async (day, timetable) => {
             day: day,
             timetable: timetable
         }
-    })
+    });
 
     if (!turnoExist) {
         return {
@@ -124,10 +120,41 @@ const deleteTurno = async (day, timetable) => {
     }
 };
 
+const upGradeTurno = async (day, timetable) => {
+
+    const turnoExist = await turno.findOne({
+        where: {
+            day: day,
+            timetable: timetable
+        }
+    });
+
+    if (!turnoExist) {
+        return {
+            status: false,
+            message: `There is no shift on the day ${day} at ${timetable} to update`,
+            data: []
+        }
+    } else {
+        turnoExist.day = day;
+        turnoExist.timetable = timetable;
+        await turnoExist.save();
+
+        const { data } = await allTurnos();
+
+        return {
+            status: true,
+            message: `Correctly updated the shift of the day ${day}`,
+            data
+        }
+    }
+};
+
 module.exports = {
     createTurno,
     allTurnos,
     turnoByDay,
     turnoByTimetable,
-    deleteTurno
+    deleteTurno,
+    upGradeTurno
 }
