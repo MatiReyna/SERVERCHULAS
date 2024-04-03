@@ -137,10 +137,10 @@ const upGradeTurno = async (id, day, timetable) => {
             day: day,
             timetable: timetable,
             id: {
-                [Op.ne]: id
+                [Op.ne]: id  // Excluimos el turno actual en la búsqueda.
             }
         }
-    });
+    });  // Comprobamos si el nuevo día y horario ya estan ocupado por otro turno.
 
     if (busyTurno) {
         return {
@@ -150,9 +150,10 @@ const upGradeTurno = async (id, day, timetable) => {
         }
     }
     
+    // Actualiza el día y/o horario del turno.
     turnoExist.day = day;
     turnoExist.timetable = timetable;
-    await turnoExist.save();
+    await turnoExist.save();  // Ejecutamos el método para que se guarden los nuevos valores reasignados a la DB.
 
     const { data } = await allTurnos();
 
