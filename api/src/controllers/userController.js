@@ -1,21 +1,29 @@
 const { user } = require('../DB_connection');
 
 const createUser = async (name, email, password, phone) => {
+    const upperCaseName = name.toUpperCase();  // Convertimos el nombre a mayúscula.
+    let level = 'STANDAR';
+
+    // Verificamos que el email sea el de administrador y le asignamos ese valor.
+    if (email === 'lencinasm48@gmail.com' || email === 'matiireyna@hotmail.com') {
+        level = 'ADMIN'
+    }
 
     const userExist = await user.findOne({ where: { email: email } });
 
     if (userExist) {
         return {
             status: false,
-            message: 'User already exists',
+            message: `The user whith email: ${email} already exists`,
             data: []
         }
     } else {
         await user.create({
-            name,
+            name: upperCaseName,
             email,
             password,
-            phone
+            phone,
+            level: level
         })
     }
 
