@@ -19,12 +19,36 @@ const createUser = async (name, email, password, phone) => {
         })
     }
 
+    const { data } = await allUsers();
+
     return {
         status: true,
-        message: 'The user was successfully created'
+        message: 'The user was successfully created',
+        data
     }
 };
 
+const allUsers = async () => {
+
+    const dataUser = await user.findAll();
+
+    const formatteData = {
+        status: true,
+        message: 'List of users',
+        data: dataUser.map((user) => ({
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            password: user.password,
+            phone: user.phone,
+            activeLogin: user.activeLogin,
+            level: user.level
+        }))
+    }
+    return formatteData
+};
+
 module.exports = {
-    createUser
+    createUser,
+    allUsers
 }
