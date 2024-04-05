@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const { user } = require('../DB_connection');
 
 const createUser = async (name, email, password, phone) => {
@@ -56,7 +57,34 @@ const allUsers = async () => {
     return formatteData
 };
 
+const userByName = async (name) => {
+    const upperCaseName = name.toUpperCase();  // Convertimos el nombre a mayúscula.
+
+    const userFind = await user.findAll({
+        where: {
+            name: {
+                [Op.iLike]: `%${upperCaseName}%`, 
+            }
+        }
+    });
+
+    if (userFind.length) {
+        return {
+            status: true,
+            message: `User found: ${upperCaseName}`,
+            data: userFind
+        }
+    } else {
+        return {
+            status: false,
+            message: `User not found: ${upperCaseName}`,
+            data: []
+        }
+    }
+};
+
 module.exports = {
     createUser,
-    allUsers
+    allUsers,
+    userByName
 }
