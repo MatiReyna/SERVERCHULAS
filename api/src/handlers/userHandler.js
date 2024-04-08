@@ -1,4 +1,4 @@
-const { createUser, allUsers, userByName } = require('../controllers/userController');
+const { createUser, allUsers, userByName, userById } = require('../controllers/userController');
 
 const postUser = async (request, response) => {
     const { name, email, password, phone } = request.body;
@@ -25,7 +25,18 @@ const getUserByName = async (request, response) => {
     }
 };
 
+const getUserById = async (request, response) => {
+    const { id } = request.params;
+    try {
+        const userId = await userById(id);
+        response.status(200).json(userId);
+    } catch (error) {
+        response.status(500).json({ status: false, error: error.message });
+    }
+};
+
 module.exports = {
     postUser,
-    getUserByName
+    getUserByName,
+    getUserById
 }

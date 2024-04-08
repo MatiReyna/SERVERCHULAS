@@ -83,8 +83,37 @@ const userByName = async (name) => {
     }
 };
 
+const userById = async (id) => {
+
+    const idUser = await user.findOne({ where: { id } });
+
+    if (idUser) {
+        return {
+            status: true,
+            message: `User with ID: ${id} was found`,
+            data: [
+                {
+                    id: idUser.id,
+                    name: idUser.name,
+                    email: idUser.email,
+                    phone: idUser.phone,
+                    activeLogin: idUser.activeLogin,
+                    level: idUser.level
+                }
+            ]
+        }
+    } else {
+        return {
+            status: false,
+            message: `User with ID: ${id} does not exist in the database`,
+            data: []
+        }
+    }
+};
+
 module.exports = {
     createUser,
     allUsers,
-    userByName
+    userByName,
+    userById
 }
