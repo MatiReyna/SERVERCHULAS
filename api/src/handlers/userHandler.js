@@ -1,4 +1,4 @@
-const { createUser, allUsers, userByName, userById } = require('../controllers/userController');
+const { createUser, allUsers, userByName, userById, deleteUser } = require('../controllers/userController');
 
 const postUser = async (request, response) => {
     const { name, email, password, phone } = request.body;
@@ -35,8 +35,19 @@ const getUserById = async (request, response) => {
     }
 };
 
+const userDelete = async (request, response) => {
+    const { id } = request.params;
+    try {
+        const deleted = await deleteUser(id);
+        response.status(200).json(deleted); 
+    } catch (error) {
+        response.status(500).json({ status: false, error: error.message });
+    }
+};
+
 module.exports = {
     postUser,
     getUserByName,
-    getUserById
+    getUserById,
+    userDelete
 }

@@ -111,9 +111,37 @@ const userById = async (id) => {
     }
 };
 
+const deleteUser = async (id) => {
+
+    const userExisting = await user.findOne(
+        { where: { id } },
+        { attributes: [ 'name' ] }
+    );
+
+    if (!userExisting) {
+        return {
+            status: false,
+            message: `User with ID: ${id} does not exist`,
+            data: []
+        }
+    }
+
+    const deleted = await user.destroy({ where: { id } });
+    const { data } = await allUsers();
+
+    if (deleted) {
+        return {
+            status: true,
+            message: `User ${userExisting.name} deleted successfully`,
+            data
+        }
+    }
+};
+
 module.exports = {
     createUser,
     allUsers,
     userByName,
-    userById
+    userById,
+    deleteUser
 }
