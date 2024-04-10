@@ -1,4 +1,4 @@
-const { createUser, allUsers, userByName, userById, deleteUser } = require('../controllers/userController');
+const { createUser, allUsers, userByName, userById, deleteUser, upGradeUser } = require('../controllers/userController');
 
 const postUser = async (request, response) => {
     const { name, email, password, phone } = request.body;
@@ -45,9 +45,20 @@ const userDelete = async (request, response) => {
     }
 };
 
+const putUser = async (request, response) => {
+    const { id, name, phone } = request.body;
+    try {
+        const upGrade = await upGradeUser(id, name, phone);
+        response.status(200).json(upGrade);
+    } catch (error) {
+        response.status(500).json({ status: false, error: error.message });
+    }
+};
+
 module.exports = {
     postUser,
     getUserByName,
     getUserById,
-    userDelete
+    userDelete,
+    putUser
 }

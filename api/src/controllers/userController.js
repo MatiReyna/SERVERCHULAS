@@ -138,10 +138,37 @@ const deleteUser = async (id) => {
     }
 };
 
+const upGradeUser = async (id, name, phone) => {
+    const upperCaseName = name.toUpperCase();
+
+    const idUser = await user.findOne({ where: { id } });
+
+    if (!idUser) {
+        return {
+            status: false,
+            message: `There is no user with ID: ${id} to upgrade`,
+            data: []
+        }
+    } else {
+        idUser.name = upperCaseName;
+        idUser.phone = phone;
+        await idUser.save();
+
+        const { data } = await allUsers();
+
+        return {
+            status: true,
+            message: `User with ID: ${id} was successfully upgraded to: ${upperCaseName}`,
+            data
+        }
+    }
+};
+
 module.exports = {
     createUser,
     allUsers,
     userByName,
     userById,
-    deleteUser
+    deleteUser,
+    upGradeUser
 }
