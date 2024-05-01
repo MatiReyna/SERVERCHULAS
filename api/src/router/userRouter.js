@@ -6,6 +6,6 @@ userRouter.post('/', postUser);  // Ok, funciona correctamente.
 userRouter.get('/', getUserByName);  // Ok, funciona correctamente.
 userRouter.get('/:id', getUserById);  // Ok, funciona correctamente.
 userRouter.delete('/:id', userDelete);  // Ok, funciona correctamente.
-userRouter.put('/', putUser);
+userRouter.put('/', putUser);  // Ok, funciona correctamente.
 
 module.exports = userRouter

@@ -1,7 +1,7 @@
 const express = require('express');
 const server = express();
 const morgan = require('morgan');
-const mainRouter = require('./routes/index');
+const mainRouter = require('./router/index');
 
 server.use(express.json());
 server.use(morgan('dev'));
