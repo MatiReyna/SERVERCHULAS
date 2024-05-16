@@ -19,7 +19,8 @@ const createTurno = async (day, timetable) => {
     } else {  // Caso contrario, lo creamos en la base de datos.
         await turno.create({
             day,
-            timetable
+            timetable,
+            states: 'LIBRE'  // Establecer el estado como LIBRE al crear el turno.
         })
     }
 
@@ -165,11 +166,34 @@ const upGradeTurno = async (id, day, timetable) => {
 
 };
 
+const upGradeTurnoStates = async (id, newState) => {
+
+    const turnoExist = await turno.findOne({ where: { id } });
+
+    if (!turnoExist) {
+        return {
+            status: false,
+            message: `Turno with ID: ${id} does not exist`,
+            data: []
+        }
+    }
+
+    turnoExist.states = newState;
+    await turnoExist.save();
+
+    return {
+        status: true,
+        message: `Turno state updated successfully to: ${newState}`,
+        data: turnoExist
+    }
+};
+
 module.exports = {
     createTurno,
     allTurnos,
     turnoByDay,
     turnoByTimetable,
     deleteTurno,
-    upGradeTurno
+    upGradeTurno,
+    upGradeTurnoStates
 }

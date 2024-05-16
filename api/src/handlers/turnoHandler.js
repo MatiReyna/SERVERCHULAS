@@ -1,9 +1,9 @@
-const { createTurno, allTurnos, turnoByDay, turnoByTimetable, deleteTurno, upGradeTurno } = require('../controllers/turnoController');
+const { createTurno, allTurnos, turnoByDay, turnoByTimetable, deleteTurno, upGradeTurno, upGradeTurnoStates } = require('../controllers/turnoController');
 
 const postTurno = async (request, response) => {
     const { day, timetable } = request.body;
     try {
-        const data = await createTurno(day, timetable);
+        const data = await createTurno(day, timetable, 'PENDING');
         response.status(200).json(data);
     } catch (error) {
         response.status(500).json({ status: false, error: error.message });
@@ -55,10 +55,21 @@ const putTurno = async (request, response) => {
     }
 };
 
+const putTurnoStates = async (request, response) => {
+    const { id, newState } = request.body;
+    try {
+        const upGrade = await upGradeTurnoStates(id, newState);
+        response.status(200).json(upGrade);
+    } catch (error) {
+        response.status(500).json({ status: false, error: error.message });
+    }
+};
+
 module.exports = {
     postTurno,
     getTurnoByDay,
     getTurnoByTimetable,
     turnoDelete,
-    putTurno
+    putTurno,
+    putTurnoStates
 }
